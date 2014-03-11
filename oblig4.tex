@@ -1,0 +1,59 @@
+\documentclass[12pt]{paper}
+\usepackage{a4}
+
+\title{Oblig 4 Inf3580}
+\author{Mark Polak}
+
+
+\begin{document}
+
+\newpage
+\section{Entailment}
+\subsection{sim:Marge rdf:type foaf:Person}
+\begin{enumerate}
+\item fam:hasSpouse rdfs:domain foaf:Person --- P
+\item sim:Marge fam:hasSpouse sim:Homer --- P
+\item sim:Marge rdf:type foaf:Person --- rdfs2, 1, 2
+\end{enumerate}
+
+\subsection{fam:hasSister rdfs:subPropertyOf fam:isRelativeOf}
+\begin{enumerate}
+\item fam:hasSister rdfs:subPropertyOf fam:hasSibling --- P
+\item fam:hasSibling rdfs:subPropertyOf fam:isRelativeOf --- P
+\item fam:hasSister rdfs:subPropertyOf fam:isRelativeOf --- rdfs5, 1, 2
+\end{enumerate}
+
+\subsection{sim:Marge rdf:type fam:Woman}
+Marge is only referred to as being a spouse and having a spouse. Like we saw in 1.1 this makes her a Person but we can not know if this person is a Woman.
+
+\subsection{sim:Herb rdf:type fam:Man}
+\begin{enumerate}
+\item {[ ]} fam:hasBrother sim:Herb --- P
+\item fam:hasBrother rdfs:range fam:Man --- P
+\item sim:Herb rdf:type fam:Man --- rdfs3, 1, 2
+\end{enumerate}
+
+\subsection{sim:Lisa fam:isRelativeOf sim:Homer}
+\begin{enumerate}
+\item sim:Lisa fam:hasFather sim:Homer --- P
+\item fam:hasFather rdfs:subPropertyOf fam:hasParent --- P
+\item fam:hasParent rdfs:subPropertyOf fam:isRelativeOf --- P
+\item fam:hasFather rfds:subPropertyOf fam:isRelativeOf --- rdfs5, 2, 3
+\item sim:Lisa fam:isRelativeOf sim:Homer --- rdfs7, 1, 4
+\end{enumerate}
+
+\subsection{sim:Lisa fam:hasMother sim:Marge}
+There does not seem to be a way to connect Lisa to Marge. Lisa has a blanknode parent but there is no way to verify that this is Marge
+
+\subsection{sim:Patty rdf:type foaf:Person}
+\begin{enumerate}
+\item {[ ]} fam:hasSister sim:Patty --- P
+\item fam:hasSister rdfs:subPropertyOf fam:hasSibling --- P
+\item fam:hasSibling rdfs:subPropertyOf fam:isRelativeOf --- P
+\item fam:hasSister rdfs:subPropertyOf fam:isRelativeOf --- rdfs5, 2 , 3
+\item {[ ]} fam:isRelativeOf sim:Patty --- rdfs7, 1, 4
+\item fam:isRelativeOf rdfs:range foaf:Person --- P
+\item sim:Patty rdf:type foaf:Person --- rdfs3, 5, 6
+\end{enumerate}
+
+\end{document}

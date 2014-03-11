@@ -1,0 +1,5 @@
+# Ignore texmaker
+*.aux
+*.log
+*.pdf
+*.synctex.gz

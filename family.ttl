@@ -1,5 +1,5 @@
 @prefix fam: <http://www.ifi.uio.no/INF3580/family#> .
-@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 ########################################################################
 # Classes
@@ -18,11 +18,11 @@ fam:Male rdf:type fam:Gender .
 # Properties
 ########################################################################
 
-#General Properties
+# General Properties
 fam:hasFamilyMember rdf:type rdf:Property .
 fam:hasGender rdf:type rdf:Property .
 
-#Family relation properties
+# Family relation properties
 fam:isRelativeOf rdf:type rdf:Property ;
                  rdfs:domain foaf:Person ;
                  rdfs:range foaf:Person .
@@ -37,7 +37,7 @@ fam:hasSister rdfs:subPropertyOf fam:hasSibling ;
               rdfs:domain foaf:Person ;
               rdfs:range fam:Woman .
 
-fam:hasParent rdf:type fam:isRelativeOf .
+fam:hasParent rdfs:subPropertyOf fam:isRelativeOf .
 
 fam:hasMother rdfs:subPropertyOf fam:hasParent ;
               rdfs:range fam:Woman .
