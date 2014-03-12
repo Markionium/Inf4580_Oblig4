@@ -30,11 +30,9 @@ fam:isRelativeOf rdf:type rdf:Property ;
 fam:hasSibling rdfs:subPropertyOf fam:isRelativeOf
 
 fam:hasBrother rdfs:subPropertyOf fam:hasSibling ;
-               rdfs:domain foaf:Person ;
                rdfs:range fam:Man . 
 
 fam:hasSister rdfs:subPropertyOf fam:hasSibling ;
-              rdfs:domain foaf:Person ;
               rdfs:range fam:Woman .
 
 fam:hasParent rdfs:subPropertyOf fam:isRelativeOf .
