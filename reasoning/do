@@ -1,0 +1,5 @@
+rm homer.*
+rm *.class
+
+make Oblig4.java
+make
