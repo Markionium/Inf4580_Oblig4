@@ -8,21 +8,23 @@ PREFIX sim: <http://www.ifi.uio.no/INF3580/simpsons#>
 PREFIX fam: <http://www.ifi.uio.no/INF3580/family#>
 
 CONSTRUCT {
-    sim:Homer a foaf:Person .
-    sim:Homer foaf:name ?name .
-    sim:Homer foaf:knows ?relative .
+    sim:Homer a foaf:Person ;
+              foaf:name ?name ;
+              foaf:knows ?relative .
     
-    ?relative a foaf:Person .
-    ?relative foaf:name ?relativename
+    ?relative a foaf:Person ;
+              foaf:name ?relativename .
 }
 WHERE { 
     {
-        ?anotherPerson fam:isRelativeOf sim:Homer .
         sim:Homer foaf:name ?name .
-        ?relative foaf:name ?relativename
+
+        ?relative fam:isRelativeOf sim:Homer ;
+                  foaf:name ?relativename .
     } UNION {
-        sim:Homer fam:isRelativeOf ?anotherPerson .
-        sim:Homer foaf:name ?name .
-        ?relative foaf:name ?relativename
+        sim:Homer fam:isRelativeOf ?relative ;
+                  foaf:name ?name .
+
+        ?relative foaf:name ?relativename .
     }
 }
