@@ -9,7 +9,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.FileUtils;
 
-
+/**
+ * @author Mark Polak
+ */
 public class Oblig4 {
 	private Model rdfSchema;
 	private Model rdfData;
@@ -30,6 +32,7 @@ public class Oblig4 {
 	private Oblig4(){
 		rdfSchema = ModelFactory.createDefaultModel();
 		rdfData = ModelFactory.createDefaultModel();
+		resultModel = ModelFactory.createDefaultModel();
 	}
 	
 	/**
@@ -50,7 +53,7 @@ public class Oblig4 {
 	}
 	
 	private void loadFileIntoModel(Model model, String rdfFile) {
-		loadFileIntoModel(model, rdfFile, FileUtils.guessLang(rdfFile));
+		loadFileIntoModel( model, rdfFile, FileUtils.guessLang(rdfFile) );
 	}
 	
 	private void loadFileIntoModel(Model model, String rdfFile, String language) {
@@ -79,8 +82,10 @@ public class Oblig4 {
 			reasoning();
 		
 		try {
-			Query query = QueryFactory.read(queryFile);
-			QueryExecution qe = QueryExecutionFactory.create(query, inferredModel);
+			Query query = QueryFactory.read( queryFile );
+			QueryExecution qe = QueryExecutionFactory.create(
+					query, inferredModel
+			);
 			resultModel = qe.execConstruct();
 		} catch (Exception e) {
 			System.out.printf("Something went wrong while trying execute "
@@ -88,7 +93,12 @@ public class Oblig4 {
 		}
 	}
 	
-	private void saveTo(String foafFile) {
+	/**
+	 * Save the resultmodel to the given file
+	 * 
+	 * @param foafFile
+	 */
+	public void saveTo(String foafFile) {
 		writeFile(resultModel, foafFile);
 	}
 	
@@ -107,13 +117,17 @@ public class Oblig4 {
 	}
 	
 	public void printStuff() {
-		System.out.println("\n\nRDF Schema ==========================================\n");
+		System.out.println(
+				"\n\nRDF Schema ==========================================\n");
 		rdfSchema.write(System.out, "TURTLE");
-		System.out.println("\n\nRDF data ==========================================\n");
+		System.out.println(
+				"\n\nRDF data ==========================================\n");
 		rdfData.write(System.out, "TURTLE");
-		System.out.println("\n\nInfered model ==========================================\n");
+		System.out.println(
+				"\n\nInfered model ==========================================\n");
 		inferredModel.write(System.out, "TURTLE");
-		System.out.println("\n\nQuery result ==========================================\n");
+		System.out.println(
+				"\n\nQuery result ==========================================\n");
 		resultModel.write(System.out, "TURTLE");
 	}
 	
@@ -136,11 +150,13 @@ public class Oblig4 {
 		}
 		
 		foafFamilyRelationsCreator = Oblig4.create();
-		foafFamilyRelationsCreator.loadSchema(schemaFile);
-		foafFamilyRelationsCreator.loadRdfGraph("http://sws.ifi.uio.no/inf3580/v14/oblig/3/simpsons.ttl");
+		foafFamilyRelationsCreator.loadSchema( schemaFile );
+		foafFamilyRelationsCreator.loadRdfGraph(
+				"http://sws.ifi.uio.no/inf3580/v14/oblig/3/simpsons.ttl"
+		);
 		foafFamilyRelationsCreator.reasoning();
-		foafFamilyRelationsCreator.execute(queryFile);
-		foafFamilyRelationsCreator.saveTo(foafFile);
+		foafFamilyRelationsCreator.execute( queryFile );
+		foafFamilyRelationsCreator.saveTo( foafFile );
 		
 		if (DEBUG) {
 			foafFamilyRelationsCreator.printStuff();
