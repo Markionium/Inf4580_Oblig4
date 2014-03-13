@@ -13,8 +13,14 @@ CONSTRUCT {
     ?relative a foaf:Person .
     ?relative foaf:name ?relativename
 }
-WHERE {
-    sim:Homer fam:isRelativeOf ?relative .
-    sim:Homer foaf:name ?name .
-    ?relative foaf:name ?relativename
+WHERE { 
+    {
+        ?anotherPerson fam:isRelativeOf sim:Homer .
+        sim:Homer foaf:name ?name .
+        ?relative foaf:name ?relativename
+    } UNION {
+        sim:Homer fam:isRelativeOf ?anotherPerson .
+        sim:Homer foaf:name ?name .
+        ?relative foaf:name ?relativename
+    }
 }

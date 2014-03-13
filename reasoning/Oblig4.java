@@ -4,6 +4,7 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.FileUtils;
@@ -12,41 +13,71 @@ import com.hp.hpl.jena.util.FileUtils;
 public class Oblig4 {
 	private Model rdfSchema;
 	private Model rdfData;
-	private Model inferredModel;
+	private InfModel inferredModel;
 	private Model resultModel;
 	
+	private final static boolean DEBUG = false;
+	
+	/**
+	 * Creates an Oblig4 object
+	 * 
+	 * @return Oblig4
+	 */
 	public static Oblig4 create() {
 		return new Oblig4();
 	}
 	
-	public Oblig4(){
+	private Oblig4(){
 		rdfSchema = ModelFactory.createDefaultModel();
 		rdfData = ModelFactory.createDefaultModel();
-		inferredModel = ModelFactory.createDefaultModel();
 	}
 	
-	private void loadSchema(String schemaFile) {
-		loadFileIntoModel(rdfSchema, schemaFile);
+	/**
+	 * Loads an rdfSchema into the rdfSchema model
+	 * 
+	 * @param schemaFile
+	 */
+	public void loadSchema(String schemaFile) {
+		loadFileIntoModel( rdfSchema, schemaFile );
 	}
 
-	private void loadRdfGraph(String rdfDataFile) {
-		loadFileIntoModel(rdfData, rdfDataFile, "TURTLE");
+	/**
+	 * Loads an rdfGraph into the rdfData model
+	 * @param rdfDataFile
+	 */
+	public void loadRdfGraph(String rdfDataFile) {
+		loadFileIntoModel( rdfData, rdfDataFile, "TURTLE" );
 	}
 	
 	private void loadFileIntoModel(Model model, String rdfFile) {
-		model.read( rdfFile, FileUtils.guessLang(rdfFile) );
+		loadFileIntoModel(model, rdfFile, FileUtils.guessLang(rdfFile));
 	}
 	
 	private void loadFileIntoModel(Model model, String rdfFile, String language) {
-		model.read( rdfFile, language );
+		try {
+			model.read( rdfFile, language );
+		} catch (Exception e) {
+			System.out.printf("Something went wrong while trying load "
+					+ " the model with data from the file: %s", rdfFile + "\n");
+		}
 	}
 	
-	private void reasoning() {
-		inferredModel = ModelFactory.createRDFSModel(rdfSchema, rdfData);
-		inferredModel = rdfData;
+	/**
+	 * Create an inferred model from the rdfData based on the given rdfSchema
+	 */
+	public void reasoning() {
+		inferredModel = ModelFactory.createRDFSModel( rdfSchema, rdfData );
 	}
 	
-	private void execute(String queryFile) {
+	/**
+	 * Execute a query on the inferred model 
+	 * 
+	 * @param queryFile
+	 */
+	public void execute(String queryFile) {
+		if (inferredModel == null)
+			reasoning();
+		
 		try {
 			Query query = QueryFactory.read(queryFile);
 			QueryExecution qe = QueryExecutionFactory.create(query, inferredModel);
@@ -75,6 +106,17 @@ public class Oblig4 {
 		}
 	}
 	
+	public void printStuff() {
+		System.out.println("\n\nRDF Schema ==========================================\n");
+		rdfSchema.write(System.out, "TURTLE");
+		System.out.println("\n\nRDF data ==========================================\n");
+		rdfData.write(System.out, "TURTLE");
+		System.out.println("\n\nInfered model ==========================================\n");
+		inferredModel.write(System.out, "TURTLE");
+		System.out.println("\n\nQuery result ==========================================\n");
+		resultModel.write(System.out, "TURTLE");
+	}
+	
 	/**
 	 * Main method to run the program
 	 * @param args
@@ -99,5 +141,9 @@ public class Oblig4 {
 		foafFamilyRelationsCreator.reasoning();
 		foafFamilyRelationsCreator.execute(queryFile);
 		foafFamilyRelationsCreator.saveTo(foafFile);
+		
+		if (DEBUG) {
+			foafFamilyRelationsCreator.printStuff();
+		}
 	}
 }
